@@ -1,2 +1,2 @@
-# todo-fastapi-pet
+# ToDo FastAPI pet project
 ToDo pet project
