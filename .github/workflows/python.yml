@@ -1,0 +1,41 @@
+name: Python
+env:
+  TEST_IMAGE_TAG: fastapi_todo:test
+on:
+  pull_request:
+    paths:
+      - 'api/**'
+     
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Get changed files
+        id: changes
+        run: |
+          git fetch > /dev/null
+          echo "changes=`git diff --name-only --diff-filter=d $(git rev-parse origin/${{ github.event.pull_request.base.ref }}) -- | grep -E '\.py$' | tr '\n' ' '`" >> $GITHUB_OUTPUT
+      - name: Summary
+        run: |
+          echo "Changed python files: ${{ steps.changes.outputs.changes }}" >> $GITHUB_STEP_SUMMARY
+
+      - uses: docker/setup-buildx-action@v3
+        if: ${{ !startsWith(steps.changes.outputs.changes, ' ') && steps.changes.outputs.changes != '' }}
+      - uses: docker/build-push-action@v6
+        if: ${{ !startsWith(steps.changes.outputs.changes, ' ') && steps.changes.outputs.changes != '' }}
+        id: build
+        with:
+          context: .
+          file: Dockerfile
+          target: build-tests
+          tags: ${{ env.TEST_IMAGE_TAG }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          load: true
+      - name: Lint changed files
+        if: ${{ !startsWith(steps.changes.outputs.changes, ' ') && steps.changes.outputs.changes != '' }}
+        run: |
+          docker run --rm -v ${PWD}:/app ${{ env.TEST_IMAGE_TAG }} /bin/bash -c \
+          "ruff check --output-format=github ${{ steps.changes.outputs.changes }}"
