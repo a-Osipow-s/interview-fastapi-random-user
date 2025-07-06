@@ -1,14 +1,15 @@
-from typing import List
+
+from typing import List, TYPE_CHECKING
 
 from sqlalchemy import Text, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from api.tasks.models import TaskCore
-from api.users.models import UserCore
+from api.models.base import Base
+from api.mixins.int_id_pk import IntIdPkMixin
+from api.mixins.dates import CreatedAtMixin, UpdateAtMixin
 
-from api.core.base import Base
-from api.core.mixins.int_id_pk import IntIdPkMixin
-from api.core.mixins.dates import CreatedAtMixin, UpdateAtMixin
+if TYPE_CHECKING:
+    from api.models import UserCore, TaskCore
 
 
 class Comment(CreatedAtMixin, UpdateAtMixin, IntIdPkMixin, Base):

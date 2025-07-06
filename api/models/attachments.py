@@ -1,15 +1,18 @@
-from typing import List
+
+from typing import List, TYPE_CHECKING
 
 from sqlalchemy import Enum, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from api.users.models import UserCore
-from api.tasks.models import TaskCore, TaskAttachmentMap
-from api.core.base import Base
-from api.core.mixins.int_id_pk import IntIdPkMixin
-from api.core.mixins.dates import CreatedAtMixin, UpdateAtMixin
+from api.models.base import Base
+from api.models.task_attachment_map import TaskAttachmentMap
+from api.mixins.int_id_pk import IntIdPkMixin
+from api.mixins.dates import CreatedAtMixin, UpdateAtMixin
 
-from api.attachments.constants import AttachmentUploadStatus
+from api.constants.attachments import AttachmentUploadStatus
+
+if TYPE_CHECKING:
+    from api.models import TaskCore, UserCore
 
 
 class Attachment(IntIdPkMixin, CreatedAtMixin, UpdateAtMixin, Base):

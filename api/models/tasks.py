@@ -1,15 +1,17 @@
-from typing import List
+from typing import List, TYPE_CHECKING
 
 from sqlalchemy import String, Enum, ForeignKey, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from api.comments.models import Comment
-from api.attachments.models import Attachment
-from api.core.base import Base
-from api.core.mixins.int_id_pk import IntIdPkMixin
-from api.core.mixins.dates import CreatedAtMixin, UpdateAtMixin
+from api.models.base import Base 
+from api.models.task_attachment_map import TaskAttachmentMap
+from api.mixins.int_id_pk import IntIdPkMixin
+from api.mixins.dates import CreatedAtMixin, UpdateAtMixin
 
-from api.tasks.constants import TaskPriority, TaskStatus, TaskType
+from api.constants.tasks import TaskPriority, TaskStatus, TaskType
+
+if TYPE_CHECKING:
+    from api.models import Comment, Attachment
 
 
 class TaskCore(CreatedAtMixin, UpdateAtMixin, IntIdPkMixin, Base):
@@ -53,7 +55,7 @@ class TaskCore(CreatedAtMixin, UpdateAtMixin, IntIdPkMixin, Base):
 
     attachments: Mapped[List["Attachment"]] = relationship(
         back_populates="tasks",
-        secondary="TaskAttachmentMap",
+        secondary=TaskAttachmentMap,
         cascade="all, delete"
     )
     
@@ -74,16 +76,6 @@ class TaskDetail(Base):
 
     core_info: Mapped["TaskCore"] = relationship(back_populates="detail")
 
-
-class TaskAttachmentMap(Base):
-    task_id: Mapped[int] = mapped_column(
-        ForeignKey("task_core.id", ondelete="CASCADE"), 
-        primary_key=True
-    )
-    attachment_id: Mapped[int] = mapped_column(
-        ForeignKey("attachment.id", ondelete="CASCADE"), 
-        primary_key=True
-    )
 
 
 class TaskStatusHistory(CreatedAtMixin, IntIdPkMixin, Base):

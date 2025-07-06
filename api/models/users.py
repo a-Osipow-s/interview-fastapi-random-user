@@ -1,16 +1,17 @@
 from datetime import datetime
-from typing import List
+from typing import List, TYPE_CHECKING
 
 from sqlalchemy import Enum, DateTime, String, ForeignKey, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from api.attachments.models import Attachment
-from api.comments.models import Comment
-from api.core.base import Base
-from api.core.mixins.int_id_pk import IntIdPkMixin
-from api.core.mixins.dates import CreatedAtMixin, UpdateAtMixin
+from api.models.base import Base
+from api.mixins.int_id_pk import IntIdPkMixin
+from api.mixins.dates import CreatedAtMixin, UpdateAtMixin
 
-from api.users.constants import Language, Timezone, UserStatus
+from api.constants.users import Language, Timezone, UserStatus
+
+if TYPE_CHECKING:
+    from api.models import Attachment, Comment
 
 
 class UserCore(IntIdPkMixin, CreatedAtMixin, UpdateAtMixin, Base):
