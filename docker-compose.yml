@@ -3,11 +3,11 @@ services:
   postgresql:
     image: postgres:latest
     container_name: fastapi_todo_db
-    environment: &postgres_creds
+    environment:
       PGDATA: /var/lib/postgresql/data/fastapi_pg_data
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${TODO__DB__DB}
+      POSTGRES_USER: ${TODO__DB__USER}
+      POSTGRES_PASSWORD: ${TODO__DB__PASSWORD}
     ports:
       - "5432:5432"
     volumes:
@@ -16,14 +16,11 @@ services:
   api:
     build:
       context: .
-      target: build-${NODE_ENV}
+      target: build-${TODO__NODE_ENV}
     container_name: fastapi_todo_api
     env_file: .env
     environment:
-      <<: 
-        - *postgres_creds
-      POSTGRES_HOST: postgresql
-      MONGO_HOST: mongo
+      TODO__DB__HOST: postgresql
     command: gunicorn -c gunicorn.dev.conf.py api.main:app
     volumes:
       - .:/app
