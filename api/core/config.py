@@ -1,6 +1,6 @@
-from pydantic import PostgresDsn
+from pydantic import BaseModel, PostgresDsn
 
-from pydantic_settings import BaseSettings, BaseModel, SettingsConfigDict
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class PostgresDB(BaseModel):
@@ -30,7 +30,7 @@ class Settings(BaseSettings):
         env_nested_delimiter="__",
     )
     node_env: str
-    db: PostgresDB = PostgresDB()
+    db: PostgresDB
 
 
 class DevSettings(Settings):

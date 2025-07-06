@@ -3,7 +3,7 @@ services:
   postgresql:
     image: postgres:latest
     container_name: fastapi_todo_db
-    environment: &postgres_creds
+    environment:
       PGDATA: /var/lib/postgresql/data/fastapi_pg_data
       POSTGRES_DB: ${TODO__DB__DB}
       POSTGRES_USER: ${TODO__DB__USER}
@@ -20,9 +20,7 @@ services:
     container_name: fastapi_todo_api
     env_file: .env
     environment:
-      <<: 
-        - *postgres_creds
-      POSTGRES_HOST: postgresql
+      TODO__DB__HOST: postgresql
     command: gunicorn -c gunicorn.dev.conf.py api.main:app
     volumes:
       - .:/app
