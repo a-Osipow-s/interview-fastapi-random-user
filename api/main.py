@@ -14,3 +14,7 @@ app: FastAPI = FastAPI(lifespan=lifespan)
 @app.get('/')
 async def root():
     return {"message": "Hello world!"}
+
+@app.get('/test')
+async def test():
+    return {"message": "test"}
