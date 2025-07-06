@@ -5,7 +5,7 @@ from sqlalchemy import Enum, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from api.models.base import Base
-from api.models.task_attachment_map import TaskAttachmentMap
+from api.models.task_attachment_map import task_attachment_map
 from api.mixins.int_id_pk import IntIdPkMixin
 from api.mixins.dates import CreatedAtMixin, UpdateAtMixin
 
@@ -25,6 +25,6 @@ class Attachment(IntIdPkMixin, CreatedAtMixin, UpdateAtMixin, Base):
     user_core: Mapped["UserCore"] = relationship(back_populates="avatar")
     tasks: Mapped[List["TaskCore"]] = relationship(
         back_populates="attachments",
-        secondary=TaskAttachmentMap,
+        secondary=task_attachment_map,
         cascade="all, delete"
     )

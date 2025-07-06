@@ -3,6 +3,8 @@ from fastapi import FastAPI
 
 from api.core.db_helper import db_helper
 
+from api.users.routes import router as users_router
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     yield
@@ -10,11 +12,4 @@ async def lifespan(app: FastAPI):
 
 app: FastAPI = FastAPI(lifespan=lifespan)
 
-
-@app.get('/')
-async def root():
-    return {"message": "Hello world!"}
-
-@app.get('/test')
-async def test():
-    return {"message": "test"}
+app.include_router(users_router)

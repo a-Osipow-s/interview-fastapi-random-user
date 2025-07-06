@@ -5,7 +5,7 @@ __all__ = (
     "UserDetail",
     "TaskCore",
     "TaskDetail",
-    "TaskAttachmentMap",
+    "task_attachment_map",
     "TaskStatusHistory",
     "TaskAssigneesHistory",
     "Comment"
@@ -20,5 +20,5 @@ from api.models.tasks import (
     TaskStatusHistory, 
     TaskAssigneesHistory
 )
-from api.models.task_attachment_map import TaskAttachmentMap
+from api.models.task_attachment_map import task_attachment_map
 from api.models.comments import Comment

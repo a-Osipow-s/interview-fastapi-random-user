@@ -21,12 +21,12 @@ class Comment(CreatedAtMixin, UpdateAtMixin, IntIdPkMixin, Base):
     comment: Mapped[str] = mapped_column(Text, nullable=False)
     parent_comment_id: Mapped[int] = mapped_column(
         ForeignKey("comment.id", ondelete="CASCADE"),
-        nullable=False
+        nullable=True
     )
 
     parent: Mapped["Comment"] = relationship(
-        remote_side=[lambda: Comment.id],
-        back_populates="subtasks"
+        remote_side="Comment.id",
+        back_populates="replies"
     )
     replies: Mapped[List["Comment"]] = relationship(
         back_populates="parent",

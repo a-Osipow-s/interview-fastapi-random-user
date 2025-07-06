@@ -1,15 +1,19 @@
-from sqlalchemy import ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import Column, ForeignKey, Table
 
 from api.models.base import Base
 
 
-class TaskAttachmentMap(Base):
-    task_id: Mapped[int] = mapped_column(
+task_attachment_map = Table(
+    "task_attachment_map",
+    Base.metadata,
+    Column(
+        "task_id", 
         ForeignKey("task_core.id", ondelete="CASCADE"), 
         primary_key=True
-    )
-    attachment_id: Mapped[int] = mapped_column(
+    ),
+    Column(
+        "attachment_id", 
         ForeignKey("attachment.id", ondelete="CASCADE"), 
         primary_key=True
     )
+)

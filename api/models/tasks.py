@@ -4,7 +4,7 @@ from sqlalchemy import String, Enum, ForeignKey, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from api.models.base import Base 
-from api.models.task_attachment_map import TaskAttachmentMap
+from api.models.task_attachment_map import task_attachment_map
 from api.mixins.int_id_pk import IntIdPkMixin
 from api.mixins.dates import CreatedAtMixin, UpdateAtMixin
 
@@ -29,7 +29,7 @@ class TaskCore(CreatedAtMixin, UpdateAtMixin, IntIdPkMixin, Base):
     )
 
     parent: Mapped["TaskCore"] = relationship(
-        remote_side=[lambda: TaskCore.id],
+        remote_side="TaskCore.id",
         back_populates="subtasks"
     )
     subtasks: Mapped[List["TaskCore"]] = relationship(
@@ -55,7 +55,7 @@ class TaskCore(CreatedAtMixin, UpdateAtMixin, IntIdPkMixin, Base):
 
     attachments: Mapped[List["Attachment"]] = relationship(
         back_populates="tasks",
-        secondary=TaskAttachmentMap,
+        secondary=task_attachment_map,
         cascade="all, delete"
     )
     
@@ -111,4 +111,4 @@ class TaskAssigneesHistory(CreatedAtMixin, IntIdPkMixin, Base):
         nullable=False,
     )
 
-    task: Mapped["TaskCore"] = relationship(back_populates="status_history")
+    task: Mapped["TaskCore"] = relationship(back_populates="assignees_history")

@@ -1,6 +1,18 @@
+import os
+from pathlib import Path
 from pydantic import BaseModel, PostgresDsn
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+class AuthJWT(BaseModel):
+    private_key_path: Path = os.path.join(BASE_DIR, 'devops', 'cert', 'auth_private_key.pem')
+    public_key_path: Path = os.path.join(BASE_DIR, 'devops', 'cert', 'auth_public_key.pem')
+    algorithm: str = "RS256"
+    access_token_expire_minutes: int = 30
 
 
 class PostgresDB(BaseModel):
@@ -31,6 +43,7 @@ class Settings(BaseSettings):
     )
     node_env: str
     db: PostgresDB
+    auth_jwt: AuthJWT = AuthJWT()
 
 
 class DevSettings(Settings):

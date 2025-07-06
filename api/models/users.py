@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List, TYPE_CHECKING
+from typing import List, Optional, TYPE_CHECKING
 
 from sqlalchemy import Enum, DateTime, String, ForeignKey, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -15,19 +15,34 @@ if TYPE_CHECKING:
 
 
 class UserCore(IntIdPkMixin, CreatedAtMixin, UpdateAtMixin, Base):
-    email: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)
-    username: Mapped[str] = mapped_column(String(40), unique=True, nullable=False)
+    email: Mapped[str] = mapped_column(
+        String(255), 
+        unique=True, 
+        nullable=False
+    )
+    username: Mapped[str] = mapped_column(
+        String(40), 
+        unique=True, 
+        nullable=False
+    )
     first_name: Mapped[str] = mapped_column(String(40), nullable=False)
     last_name: Mapped[str] = mapped_column(String(40), nullable=False)
-    password: Mapped[str] = mapped_column(String(50), nullable=False)
-    status: Mapped[UserStatus] = mapped_column(Enum(UserStatus), nullable=False)
-    avatar_id: Mapped[int] = mapped_column(ForeignKey("attachment.id"), nullable=True)
+    password: Mapped[str] = mapped_column(String(255), nullable=False)
+    status: Mapped[UserStatus] = mapped_column(
+        Enum(UserStatus), 
+        nullable=False, 
+        default=UserStatus.CREATED
+    )
+    avatar_id: Mapped[Optional[int]] = mapped_column(
+        ForeignKey("attachment.id"), 
+        nullable=True
+    )
 
-    detail: Mapped["UserDetail"] = relationship(
+    detail: Mapped[Optional["UserDetail"]] = relationship(
         back_populates="user_core",
         uselist=False
     )
-    avatar: Mapped["Attachment"] = relationship(
+    avatar: Mapped[Optional["Attachment"]] = relationship(
         back_populates="user_core",
         uselist=False
     )
