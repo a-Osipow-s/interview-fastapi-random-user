@@ -1,3 +1,4 @@
+import bcrypt
 from datetime import datetime
 from typing import List, Optional, TYPE_CHECKING
 
@@ -9,6 +10,8 @@ from api.mixins.int_id_pk import IntIdPkMixin
 from api.mixins.dates import CreatedAtMixin, UpdateAtMixin
 
 from api.constants.users import Language, Timezone, UserStatus
+
+from api.utils.password import hash_password
 
 if TYPE_CHECKING:
     from api.models import Attachment, Comment
@@ -27,7 +30,11 @@ class UserCore(IntIdPkMixin, CreatedAtMixin, UpdateAtMixin, Base):
     )
     first_name: Mapped[str] = mapped_column(String(40), nullable=False)
     last_name: Mapped[str] = mapped_column(String(40), nullable=False)
-    password: Mapped[str] = mapped_column(String(255), nullable=False)
+    _password: Mapped[str] = mapped_column(
+        "password", 
+        String(255), 
+        nullable=False
+    )
     status: Mapped[UserStatus] = mapped_column(
         Enum(UserStatus), 
         nullable=False, 
@@ -50,6 +57,20 @@ class UserCore(IntIdPkMixin, CreatedAtMixin, UpdateAtMixin, Base):
         back_populates="user",
         cascade="all, delete-orphan"
     )
+
+    @property
+    def password(self):
+        raise AttributeError("")
+
+    @password.setter
+    def password(self, password: str):
+        self._password = hash_password(password).decode()
+
+    def validate_password(self, hashed_password: bytes) -> bool:
+        return bcrypt.checkpw(
+            password=self._password.encode(),
+            hashed_password=hashed_password
+        )   
 
 
 

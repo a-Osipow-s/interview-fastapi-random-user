@@ -22,7 +22,7 @@ async def login(
     #     access_token=access_token,
     #     token_type="Bearer"
     # )
-
+    pass
 
 @router.delete("/sessions/")
 async def logout():
