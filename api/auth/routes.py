@@ -1,28 +1,40 @@
 from typing import Annotated
-from fastapi import APIRouter, Depends, HTTPException, status
+
+from sqlalchemy.engine import Row
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordRequestForm
 
-from api.auth import utils
-from api.auth.schemas import UserAuthSchema, Token
+from api.auth.crud import get_user_by_username
+from api.auth.schemas import SessionUser, Token
+from api.auth.utils import encode_jwt
+
+from api.core.db_helper import db_helper
 
 router = APIRouter(prefix="/auth", tags=["AUTH"])
 
 
-@router.post("/sessions/")
+@router.post("/sessions/", response_model=Token)
 async def login(
-    form_data: Annotated[OAuth2PasswordRequestForm, Depends()]
+    session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
+    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
 ):
     # https://fastapi.tiangolo.com/tutorial/security/simple-oauth2/#update-the-dependencies
-    # jwt_payload = {
-    #     "sub": user_auth.id,
-    #     "username": user_auth.username
-    # }
-    # access_token = utils.encode_jwt(jwt_payload)
-    # return Token(
-    #     access_token=access_token,
-    #     token_type="Bearer"
-    # )
-    pass
+    user: Row[SessionUser]  = await get_user_by_username(
+        session, 
+        form_data.username
+    )
+    jwt_payload: dict = {
+        "sub": user.id,
+        "username": user.username
+    }
+    access_token: str = encode_jwt(jwt_payload)
+    return Token(
+        access_token=access_token,
+        token_type="Bearer"
+    )
+
 
 @router.delete("/sessions/")
 async def logout():

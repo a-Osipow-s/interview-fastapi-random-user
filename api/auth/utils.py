@@ -2,7 +2,7 @@ import jwt
 
 from datetime import datetime, timedelta
 
-from core.config import settings
+from api.core.config import settings
 
 
 def encode_jwt(
@@ -22,12 +22,11 @@ def encode_jwt(
         exp=expire,
         iat=now
     )
-    encoded = jwt.encode(
+    return jwt.encode(
         to_encode,
         private_key,
         algorithm=algorithm
     )
-    return encoded
 
 
 def decode_jwt(
@@ -35,9 +34,8 @@ def decode_jwt(
     public_key: str = settings.auth_jwt.public_key_path.read_text(),
     algorithm: str = settings.auth_jwt.algorithm,
 ):
-    decoded = jwt.decode(
+    return jwt.decode(
         token,
         public_key,
         algorithm=[algorithm]
     )
-    return decoded

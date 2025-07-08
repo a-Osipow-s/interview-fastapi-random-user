@@ -60,7 +60,7 @@ class UserCore(IntIdPkMixin, CreatedAtMixin, UpdateAtMixin, Base):
 
     @property
     def password(self):
-        raise AttributeError("")
+        raise AttributeError("You cannot access this protected attribute.")
 
     @password.setter
     def password(self, password: str):

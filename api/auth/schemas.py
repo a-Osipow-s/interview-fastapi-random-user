@@ -1,10 +1,11 @@
+from typing import TypedDict
 from pydantic import BaseModel
 
 
-class UserAuthSchema(BaseModel):
-    id: int
-    username: str
-    password: str
+class SessionUser(TypedDict):
+    id: int | None
+    username: str | None
+    email: str | None
 
 
 class Token(BaseModel):
