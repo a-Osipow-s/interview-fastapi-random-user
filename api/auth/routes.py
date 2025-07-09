@@ -1,13 +1,12 @@
 from typing import Annotated
 
-from sqlalchemy.engine import Row
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordRequestForm
 
 from api.auth.crud import get_user_by_username
-from api.auth.schemas import SessionUser, Token
+from api.auth.schemas import RowSessionUser, Token
 from api.auth.utils import encode_jwt
 
 from api.core.db_helper import db_helper
@@ -21,7 +20,7 @@ async def login(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
 ):
     # https://fastapi.tiangolo.com/tutorial/security/simple-oauth2/#update-the-dependencies
-    user: Row[SessionUser]  = await get_user_by_username(
+    user: RowSessionUser  = await get_user_by_username(
         session, 
         form_data.username
     )
