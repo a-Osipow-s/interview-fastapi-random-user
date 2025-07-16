@@ -73,7 +73,6 @@ class UserCore(IntIdPkMixin, CreatedAtMixin, UpdateAtMixin, Base):
         )   
 
 
-
 class UserDetail(Base):
     user_id: Mapped[int] = mapped_column(
         ForeignKey("user_core.id", ondelete="CASCADE"), 

@@ -2,14 +2,18 @@ from typing import Annotated
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from fastapi import APIRouter, Depends
-from fastapi.security import OAuth2PasswordRequestForm
+from fastapi import APIRouter, Depends, Form, HTTPException, status
 
-from api.auth.crud import get_user_by_username
-from api.auth.schemas import RowSessionUser, Token
+from api.auth.crud import get_user_core_by_username
+from api.auth.schemas import Token, LoginForm
 from api.auth.utils import encode_jwt
 
 from api.core.db_helper import db_helper
+
+from api.models.users import UserCore
+
+from api.utils.password import hash_password
+
 
 router = APIRouter(prefix="/auth", tags=["AUTH"])
 
@@ -17,13 +21,21 @@ router = APIRouter(prefix="/auth", tags=["AUTH"])
 @router.post("/sessions/", response_model=Token)
 async def login(
     session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
-    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+    login_form: Annotated[LoginForm, Form()],
 ):
-    # https://fastapi.tiangolo.com/tutorial/security/simple-oauth2/#update-the-dependencies
-    user: RowSessionUser  = await get_user_by_username(
-        session, 
-        form_data.username
+    user: UserCore = await get_user_core_by_username(
+        session, login_form.username
     )
+
+    if not user or not user.validate_password(
+        hash_password(login_form.password)
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid email or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )         
+
     jwt_payload: dict = {
         "sub": user.id,
         "username": user.username

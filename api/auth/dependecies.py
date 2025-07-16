@@ -6,7 +6,7 @@ from jwt.exceptions import InvalidTokenError
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from api.auth.crud import get_user_by_username
+from api.auth.crud import get_session_user_by_username
 from api.auth.schemas import RowSessionUser, TokenPayload
 from api.auth.utils import decode_jwt
 
@@ -32,7 +32,7 @@ async def get_session_user(
             raise credentials_exception
     except InvalidTokenError:
         raise credentials_exception
-    user: RowSessionUser = get_user_by_username(session, username)
+    user: RowSessionUser = get_session_user_by_username(session, username)
     if user is None:
         raise credentials_exception
     return user
