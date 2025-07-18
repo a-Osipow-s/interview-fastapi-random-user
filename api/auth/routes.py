@@ -27,9 +27,7 @@ async def login(
         session, login_form.username
     )
 
-    if not user or not user.validate_password(
-        hash_password(login_form.password)
-    ):
+    if not user or not user.validate_password(login_form.password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid email or password",

@@ -66,10 +66,10 @@ class UserCore(IntIdPkMixin, CreatedAtMixin, UpdateAtMixin, Base):
     def password(self, password: str):
         self._password = hash_password(password).decode()
 
-    def validate_password(self, hashed_password: bytes) -> bool:
+    def validate_password(self, password: str) -> bool:
         return bcrypt.checkpw(
-            password=self._password.encode(),
-            hashed_password=hashed_password
+            password=password.encode(),
+            hashed_password=self._password.encode()
         )   
 
 
