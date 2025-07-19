@@ -2,17 +2,16 @@ from typing import Annotated
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from fastapi import APIRouter, Depends, Form, HTTPException, status
+from fastapi import APIRouter, Depends, Form, HTTPException, Response, status
 
-from api.auth.crud import get_user_core_by_username
-from api.auth.schemas import Token, LoginForm
+from api.users.crud import get_user_core_by_username
+from api.auth.dependecies import get_session_user, oauth2_scheme
+from api.auth.schemas import Token, LoginForm, RowSessionUser
 from api.auth.utils import encode_jwt
 
 from api.core.db_helper import db_helper
 
-from api.models.users import UserCore
-
-from api.utils.password import hash_password
+from api.models import UserCore
 
 
 router = APIRouter(prefix="/auth", tags=["AUTH"])
@@ -35,8 +34,9 @@ async def login(
         )         
 
     jwt_payload: dict = {
-        "sub": user.id,
-        "username": user.username
+        "sub": user.username,
+        "id": user.id,
+        "email": user.email,
     }
     access_token: str = encode_jwt(jwt_payload)
     return Token(
@@ -46,6 +46,8 @@ async def login(
 
 
 @router.delete("/sessions/")
-async def logout():
-    # revoked token, add to blacklist
-    pass
+async def logout(
+    token: Annotated[str, Depends(oauth2_scheme)],
+    session_user: Annotated[RowSessionUser, Depends(get_session_user)]
+):
+    return Response(status_code=status.HTTP_204_NO_CONTENT)

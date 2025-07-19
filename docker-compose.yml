@@ -21,11 +21,13 @@ services:
     env_file: .env
     environment:
       TODO__DB__HOST: postgresql
-    command: gunicorn -c gunicorn.dev.conf.py api.main:app
+    # command: debugpy --listen 0.0.0.0:8101 -m gunicorn -c gunicorn.dev.conf.py api.main:app
+    command: debugpy --listen 0.0.0.0:8101 -m uvicorn --reload --host 0.0.0.0 --port 8000 api.main:app
     volumes:
       - .:/app
     ports:
       - "8000:8000"
+      - "8101:8101"
     depends_on:
       - postgresql
 

@@ -12,7 +12,6 @@ capture_output = True
 timeout = 1800
 graceful_timeout = 10
 
-worker_class = 'gthread'
 worker_class = 'uvicorn.workers.UvicornWorker'
 
 threads = 8 * multiprocessing.cpu_count()

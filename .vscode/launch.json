@@ -1,0 +1,21 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python Debugger: FastAPI todo",
+            "type": "debugpy",
+            "request": "attach",
+            "subProcess": true,
+            "connect": {
+                "host": "localhost",
+                "port": 8101,
+            },
+            "pathMappings": [
+                {
+                    "localRoot": "${workspaceFolder}",
+                    "remoteRoot": "/app"
+                }
+            ]
+        }
+    ]
+}

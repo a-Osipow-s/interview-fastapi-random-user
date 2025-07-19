@@ -13,7 +13,7 @@ from api.auth.utils import decode_jwt
 from api.core.db_helper import db_helper
 
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/sessions")
 
 
 async def get_session_user(
@@ -27,12 +27,14 @@ async def get_session_user(
     )
     try:
         payload: TokenPayload = decode_jwt(token)
-        username: str = payload.get("username")
-        if username is None:
+        username: str = payload.get("sub")
+        if not username:
             raise credentials_exception
     except InvalidTokenError:
         raise credentials_exception
-    user: RowSessionUser = get_session_user_by_username(session, username)
-    if user is None:
+    user: RowSessionUser = await get_session_user_by_username(
+        session, username
+    )
+    if not user:
         raise credentials_exception
     return user
