@@ -1,10 +1,14 @@
 from pathlib import Path
-from pydantic import BaseModel, PostgresDsn
+from pydantic import BaseModel, RedisDsn
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 BASE_DIR = Path(__file__).parent.parent.parent
+
+
+class Redis(BaseModel):
+    url: RedisDsn
 
 
 class AuthJWT(BaseModel):
@@ -31,7 +35,7 @@ class PostgresDB(BaseModel):
     }
 
     @property
-    def db_url(self) -> PostgresDsn:
+    def db_url(self) -> str:
         return f'{self.driver}://{self.user}:{self.password}@{self.host}:{self.port}/{self.db}'
 
 
@@ -42,6 +46,7 @@ class Settings(BaseSettings):
     )
     node_env: str
     db: PostgresDB
+    redis: Redis
     auth_jwt: AuthJWT = AuthJWT()
 
 

@@ -1,4 +1,4 @@
-from typing import AsyncGenerator
+from typing import Annotated, AsyncGenerator
 from pydantic import PostgresDsn
 
 from sqlalchemy.ext.asyncio import ( 
@@ -13,7 +13,7 @@ from api.core.config import settings
 
 class DatabaseHelper:
 
-    def __init__(self, url: PostgresDsn, echo: bool = False) -> None:
+    def __init__(self, url: Annotated[str, PostgresDsn], echo: bool = False) -> None:
         self.engine: AsyncEngine = create_async_engine(
             url=url, 
             echo=echo,

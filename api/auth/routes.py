@@ -1,5 +1,6 @@
 from typing import Annotated
 
+from redis.asyncio.client import Redis as ClientRedis
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from fastapi import APIRouter, Depends, Form, HTTPException, Response, status
@@ -10,6 +11,7 @@ from api.auth.schemas import Token, LoginForm, RowSessionUser
 from api.auth.utils import encode_jwt
 
 from api.core.db_helper import db_helper
+from api.core.cache_helper import cache_helper
 
 from api.models import UserCore
 
@@ -48,6 +50,7 @@ async def login(
 @router.delete("/sessions/")
 async def logout(
     token: Annotated[str, Depends(oauth2_scheme)],
-    session_user: Annotated[RowSessionUser, Depends(get_session_user)]
+    session_user: Annotated[RowSessionUser, Depends(get_session_user)],
+    cache_client: Annotated[ClientRedis, Depends(cache_helper.get_client)]
 ):
     return Response(status_code=status.HTTP_204_NO_CONTENT)
