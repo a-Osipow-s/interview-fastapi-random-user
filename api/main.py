@@ -13,7 +13,12 @@ async def lifespan(app: FastAPI):
     await db_helper.dispose()
     await cache_helper.aclose()
 
-app: FastAPI = FastAPI(lifespan=lifespan)
+app: FastAPI = FastAPI(
+    lifespan=lifespan,
+    swagger_ui_parameters={
+        'defaultModelsExpandDepth': -1,
+    }
+)
 
 app.include_router(auth_router)
 app.include_router(users_router)

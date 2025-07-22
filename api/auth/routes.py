@@ -3,9 +3,15 @@ from typing import Annotated
 from redis.asyncio.client import Redis as ClientRedis
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from fastapi import APIRouter, Depends, Form, HTTPException, Response, status
+from fastapi import ( 
+    APIRouter, 
+    Depends, 
+    Form, 
+    Response, 
+    status
+)
 
-from api.users.crud import get_user_core_by_username
+from api.auth.crud import authorize_user
 from api.auth.dependecies import get_session_user, oauth2_scheme
 from api.auth.schemas import Token, LoginForm, RowSessionUser
 from api.auth.utils import encode_jwt
@@ -24,16 +30,9 @@ async def login(
     session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
     login_form: Annotated[LoginForm, Form()],
 ):
-    user: UserCore = await get_user_core_by_username(
-        session, login_form.username
+    user: UserCore = await authorize_user(
+        session, login_form.username, login_form.password
     )
-
-    if not user or not user.validate_password(login_form.password):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid email or password",
-            headers={"WWW-Authenticate": "Bearer"},
-        )         
 
     jwt_payload: dict = {
         "sub": user.username,
