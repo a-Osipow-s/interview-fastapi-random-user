@@ -12,7 +12,7 @@ from api.users.schemas import UserCreate
 router = APIRouter(prefix="/users", tags=["Users"])
 
 
-@router.post("/")
+@router.post("")
 async def create_user(
     session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
     user_create: Annotated[UserCreate, Form()]

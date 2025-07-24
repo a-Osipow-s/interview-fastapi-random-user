@@ -9,7 +9,7 @@ from api.models.base import Base
 from api.mixins.int_id_pk import IntIdPkMixin
 from api.mixins.dates import CreatedAtMixin, UpdateAtMixin
 
-from api.constants.users import Language, Timezone, UserStatus
+from api.enums.users import Language, Timezone, UserStatus
 
 from api.utils.password import hash_password
 

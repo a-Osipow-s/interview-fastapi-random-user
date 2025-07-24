@@ -9,7 +9,7 @@ from api.models.task_attachment_map import task_attachment_map
 from api.mixins.int_id_pk import IntIdPkMixin
 from api.mixins.dates import CreatedAtMixin, UpdateAtMixin
 
-from api.constants.attachments import AttachmentUploadStatus
+from api.enums.attachments import AttachmentUploadStatus
 
 if TYPE_CHECKING:
     from api.models import TaskCore, UserCore

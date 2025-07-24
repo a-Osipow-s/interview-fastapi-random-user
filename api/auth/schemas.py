@@ -2,7 +2,7 @@ from typing import TypedDict, TypeAlias
 
 from sqlalchemy.engine import Row
 
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 
 
 class SessionUser(TypedDict):
@@ -15,8 +15,11 @@ RowSessionUser: TypeAlias = Row[SessionUser]
 
 
 class TokenPayload(TypedDict):
-    sub: int
-    username: str
+    sub: str
+    id: int
+    email: EmailStr
+    exp: int
+    iat: int
 
 
 class Token(BaseModel):
