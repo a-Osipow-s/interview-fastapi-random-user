@@ -24,6 +24,7 @@ dependencies = [
 [tool.ruff]
 line-length = 79
 indent-width = 4
+extend-exclude = ["alembic"]
 
 [tool.ruff.format]
 quote-style = "double"
