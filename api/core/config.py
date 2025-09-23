@@ -39,6 +39,7 @@ class Settings(BaseSettings):
     )
     node_env: str
     db: PostgresDB
+    redis: Redis
 
 
 class DevSettings(Settings):
