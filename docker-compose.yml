@@ -1,16 +1,7 @@
 services:
-
-  redis:
-    image: redis:latest
-    container_name: fastapi_todo_redis
-    ports:
-      - "127.0.0.1:6379:6379"
-    volumes:
-      - fastapi_redis_data:/redis_data
-
   postgresql:
     image: postgres:latest
-    container_name: fastapi_todo_db
+    container_name: fastapi_interview_db
     environment:
       PGDATA: /var/lib/postgresql/data/fastapi_pg_data
       POSTGRES_DB: ${TODO__DB__DB}
@@ -25,11 +16,10 @@ services:
     build:
       context: .
       target: build-${TODO__NODE_ENV}
-    container_name: fastapi_todo_api
+    container_name: fastapi_interview_api
     env_file: .env
     environment:
       TODO__DB__HOST: postgresql
-    # command: debugpy --listen 0.0.0.0:8101 -m gunicorn -c gunicorn.dev.conf.py api.main:app
     command: debugpy --listen 0.0.0.0:8101 -m uvicorn --reload --host 0.0.0.0 --port 8000 api.main:app
     volumes:
       - .:/app
@@ -41,9 +31,8 @@ services:
 
 volumes:
   fastapi_pg_data:
-  fastapi_redis_data:
 
 networks:
   default:
-    name: fastapi_todo_pet
+    name: fastapi_interview_pet
     external: true

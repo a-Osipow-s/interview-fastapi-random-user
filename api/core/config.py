@@ -11,13 +11,6 @@ class Redis(BaseModel):
     url: RedisDsn
 
 
-class AuthJWT(BaseModel):
-    private_key_path: Path = BASE_DIR / 'devops' / 'cert' / 'auth_private_key.pem'
-    public_key_path: Path = BASE_DIR / 'devops' / 'cert' / 'auth_public_key.pem'
-    algorithm: str = "RS256"
-    access_token_expire_minutes: int = 30
-
-
 class PostgresDB(BaseModel):
     host: str = "localhost"
     port: str = "5432"
@@ -46,8 +39,6 @@ class Settings(BaseSettings):
     )
     node_env: str
     db: PostgresDB
-    redis: Redis
-    auth_jwt: AuthJWT = AuthJWT()
 
 
 class DevSettings(Settings):

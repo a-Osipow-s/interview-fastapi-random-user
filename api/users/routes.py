@@ -2,21 +2,50 @@ from typing import Annotated
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from fastapi import APIRouter, Depends, Form, Response, status
+from fastapi import APIRouter, Depends
 
 from api.core.db_helper import db_helper
-from api.users import crud
-from api.users.schemas import UserCreate
 
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
 
-@router.post("")
+@router.post("/list")
+async def get_users(
+    session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
+):
+    """Get random users."""
+    ...
+
+
+@router.post("/{user_id}/user")
+async def get_user(
+    session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
+):
+    """Get random user."""
+    ...
+
+
+@router.post("/{user_id}/create")
 async def create_user(
     session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
-    user_create: Annotated[UserCreate, Form()]
 ):
-    """Create new user. User sign up."""
-    await crud.create_user(session, user_create)
-    return Response("User created", status_code=status.HTTP_201_CREATED)
+    """Create new random user."""
+    ...
+
+
+@router.post("/{user_id}/update")
+async def update_user(
+    session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
+):
+    """Update random user."""
+    ...
+
+
+@router.post("/{user_id}/delete")
+async def delete_user(
+    session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
+):
+    """Delete random user."""
+    ...
+
