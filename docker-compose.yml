@@ -1,25 +1,14 @@
 services:
-
-  redis:
-    image: redis:latest
-    container_name: fastapi_interview_redis
-    ports:
-      - "127.0.0.1:6379:6379"
-    volumes:
-      - fastapi_redis_data:/redis_data
-
-  postgresql:
-    image: postgres:latest
-    container_name: fastapi_interview_db
+  mongo:
+    image: mongo:6.0
+    container_name: fastapi_interview_mongo
+    restart: always
     environment:
-      PGDATA: /var/lib/postgresql/data/fastapi_pg_data
-      POSTGRES_DB: ${TODO__DB__DB}
-      POSTGRES_USER: ${TODO__DB__USER}
-      POSTGRES_PASSWORD: ${TODO__DB__PASSWORD}
+      MONGO_INITDB_DATABASE: test
     ports:
-      - "5432:5432"
+      - "27017:27017"
     volumes:
-      - fastapi_pg_data:/var/lib/postgresql/data/fastapi_pg_data
+      - fastapi_mongo_data:/data/db
 
   api:
     build:
@@ -28,7 +17,7 @@ services:
     container_name: fastapi_interview_api
     env_file: .env
     environment:
-      TODO__DB__HOST: postgresql
+      MONGO_DETAILS: mongodb://mongo:27017/test
     command: debugpy --listen 0.0.0.0:8101 -m uvicorn --reload --host 0.0.0.0 --port 8000 api.main:app
     volumes:
       - .:/app
@@ -36,13 +25,7 @@ services:
       - "8000:8000"
       - "8101:8101"
     depends_on:
-      - postgresql
+      - mongo
 
 volumes:
-  fastapi_pg_data:
-  fastapi_redis_data:
-
-networks:
-  default:
-    name: fastapi_interview_pet
-    external: true
+  fastapi_mongo_data:
