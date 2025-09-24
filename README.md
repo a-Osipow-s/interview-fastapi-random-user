@@ -1,6 +1,6 @@
 ### Setup
 1. Make `.env` and paste values from `.env.dev`
-2. `docker compose create network`
+2. `docker network create fastapi_interview_pet`
 3. `docker compose up`
 
 ### http://localhost:8000/docs#/
