@@ -43,10 +43,3 @@
       "phone": "(272) 790-0888",
       "cell": "(489) 330-2385",
 }
-
-### Need to save this fields data.
-#### For User Table.
-'gender', 'first_name', 'last_name', 'title', 'email', 'username', 'password', 'age', 'phone', 'cell'.
-
-#### For Location Table.
-'city', 'state', 'country', 'timezone', 'postcode', 'street_name', 'street_number'

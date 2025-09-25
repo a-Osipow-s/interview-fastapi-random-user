@@ -10,7 +10,7 @@ from api.core.db_helper import db_helper
 router = APIRouter(prefix="/users", tags=["Users"])
 
 
-@router.post("/list")
+@router.get("/list")
 async def get_users(
     session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
 ):
@@ -18,7 +18,7 @@ async def get_users(
     ...
 
 
-@router.post("/{user_id}/user")
+@router.get("/{user_id}/user")
 async def get_user(
     session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
 ):
@@ -34,7 +34,7 @@ async def create_user(
     ...
 
 
-@router.post("/{user_id}/update")
+@router.put("/{user_id}/update")
 async def update_user(
     session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
 ):
@@ -42,7 +42,7 @@ async def update_user(
     ...
 
 
-@router.post("/{user_id}/delete")
+@router.delete("/{user_id}/delete")
 async def delete_user(
     session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
 ):
