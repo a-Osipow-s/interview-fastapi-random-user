@@ -1,7 +1,7 @@
 import datetime
 
 from sqlalchemy import String, Text, DateTime, Enum
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column
 
 from api.enums.books import BooksType
 from api.models.base import Base
@@ -36,5 +36,3 @@ class Book(IntIdPkMixin, CreatedAtMixin, UpdateAtMixin, Base):
         nullable=False,
         default=BooksType.FICTION
     )
-
-
